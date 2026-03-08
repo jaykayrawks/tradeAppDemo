@@ -1,0 +1,56 @@
+{
+  "name": "tradeapp",
+  "version": "1.0.0",
+  "description": "Trade App Demo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "services/market-data-service",
+    "services/realtime-service", 
+    "services/bff"
+  ],
+  "scripts": {
+    "install:frontend": "npm  --prefix ./frontend install",
+    "install:market-data": "npm --prefix ./services/market-data-service install",
+    "install:realtime": "npm --prefix ./services/realtime-service install", 
+    "install:bff": "npm --prefix ./services/bff install",
+    
+    "dev:frontend": "npm --prefix ./frontend run dev",
+    "dev:market-data": "npm --prefix ./services/market-data-service run dev",
+    "dev:realtime": "npm --prefix ./services/realtime-service run dev", 
+    "dev:bff": "npm --prefix ./services/bff run dev",
+    
+    "start:frontend": "npm --prefix ./frontend run dev",
+    "start:market-data": "npm --prefix ./services/market-data-service start",
+    "start:realtime": "npm --prefix ./services/realtime-service start",
+    "start:bff": "npm --prefix ./services/bff start",
+
+    "install:all": "concurrently \"npm run install:market-data\" \"npm run install:realtime\" \"npm run install:bff\" \"npm run install:frontend\"",
+    "dev:all": "concurrently \"npm run dev:market-data\" \"npm run dev:realtime\" \"npm run dev:bff\" \"npm run dev:frontend\"",
+    "start:all": "concurrently \"npm run start:market-data\" \"npm run start:realtime\" \"npm run start:bff\" \"npm run start:frontend\"",
+    "start:services": "concurrently \"npm run start:market-data\" \"npm run start:realtime\" \"npm run start:bff\"",
+    
+    "build:frontend": "npm --prefix ./frontend run build",
+    "build:all": "npm run build:frontend",
+    
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "docker:restart": "npm run docker:down && npm run docker:up",
+    
+    "clean": "rm -rf node_modules frontend/node_modules services/*/node_modules",
+    "clean:install": "npm run clean && npm run install:all"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+  ],
+  "author": "",
+  "license": "MIT"
+}

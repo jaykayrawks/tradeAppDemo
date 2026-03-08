@@ -65,10 +65,8 @@ setInterval(() => {
     
     currentPrices[ticker.symbol] = newPrice;
 
-    // Broadcast to WebSocket clients
     broadcastPriceUpdate(ticker.symbol, newPrice, timestamp);
     
-    // Update the market data service
     await updateMarketDataService(ticker.symbol, newPrice, timestamp);
   });
 }, PRICE_UPDATE_INTERVAL);
@@ -157,40 +155,6 @@ wss.on("connection", (ws) => {
   ws.on("error", (error) => {
     console.error("WebSocket error:", error);
   });
-});
-
-// ----------------------
-// REST API for Service Health
-// ----------------------
-
-app.get("/health", (req, res) => {
-  const totalConnections = Object.values(subscribers).reduce((sum, set) => sum + set.size, 0);
-  
-  res.json({
-    status: "healthy",
-    service: "realtime-service",
-    connections: totalConnections,
-    subscribers: Object.keys(subscribers).reduce((acc, ticker) => {
-      acc[ticker] = subscribers[ticker].size;
-      return acc;
-    }, {}),
-    timestamp: new Date().toISOString()
-  });
-});
-
-app.get("/stats", (req, res) => {
-  const stats = {
-    totalConnections: Object.values(subscribers).reduce((sum, set) => sum + set.size, 0),
-    tickerStats: Object.keys(subscribers).map(ticker => ({
-      ticker,
-      subscribers: subscribers[ticker].size,
-      currentPrice: currentPrices[ticker]
-    })),
-    uptime: process.uptime(),
-    timestamp: Date.now()
-  };
-  
-  res.json(stats);
 });
 
 const PORT = process.env.PORT || 3002;
